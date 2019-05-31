@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>The Venus Connector</title>
+    {% load static %}	
+    <link rel="stylesheet" href="{% static 'align_app/css/venus.css' %}">    
+    <style>
+        .bg {
+            background-image: url("{% static 'align_app/images/wow.png' %}");
+            background-size:inherit;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            width: 100%;
+            opacity: 0;
+            transition: .5s ease;
+            background-image: url("{% static 'align_app/images/wow.png' %}");
+        }
+    </style>
+</head>
+<body>
+    <div id="video_bg" style="position: absolute; top: 0; width: 100%; height: 100%; z-index: -1;">
+        <video style="min-width: 100%; min-height: 100%; position: fixed;" autoplay loop muted>
+                <source src="{% static 'align_app/images/stars-high-720.mp4' %}" type="video/mp4">
+        </video>
+    </div>
+    <div class="container text-white font-weight-lighter">
+        <div class="header row m-3" >
+            <a href="/mercury/{{request.session.id}}/profile" class="col-10 text-white font-weight-lighter" style="text-decoration: none;"><h3 class="font-weight-lighter">{{request.session.username}}</h3></a>
+            <a href="/" class="col-2 text-right text-white font-weight-lighter">Back to Earth</a>
+        </div>
+        <div class="bg p-3 m-5">
+            <h2 class="text-white font-weight-lighter">The Venus Connector</h2>
+            <table class="table text-white font-weight-lighter" style="text-align: center;">
+                <thead>
+                    <tr>
+                        <th scope="col">Stargazers</th>
+                        <th scope="col">Sun</th>
+                        <th scope="col">Moon</th>
+                        <th scope="col">Rising</th>
+                        <th scope="col">Connect</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in all_users %}
+                        {% if user.id != request.session.id %}
+                            <tr>
+                                <td>{{ user.username }}</td>
+                                {% with "align_app/images/"|add:user.sun_sign|add:".png" as sunny %}
+                                <td>
+                                    <div class="box">
+                                        <img  class="lost" src="{% static sunny %}" alt="{{user.sun_sign}}">
+                                        <div class="overlay">
+                                            <p class="found text">{{user.sun_sign}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                {% endwith %}
+                                {% with "align_app/images/"|add:user.moon_sign|add:".png" as moony %}
+                                <td>
+                                    <div class="box">
+                                        <img src="{% static moony %}" alt="{{user.moon_sign}}" class="lost">
+                                        <div class="overlay">
+                                            <p class="found text">{{user.moon_sign}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                {% endwith %}
+                                {% with "align_app/images/"|add:user.rising_sign|add:".png" as risy %}
+                                <td>
+                                    <div class="box">
+                                        <img src="{% static risy %}" alt="{{user.rising_sign}}" class="lost">
+                                        <div class="overlay">
+                                            <p class="found text">{{user.rising_sign}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                {% endwith %}
+                                <td><a href="/mercury/{{user.id}}"><img id="small" src="{% static 'align_app/images/Venus.png' %}" alt="Venus"></a></td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
